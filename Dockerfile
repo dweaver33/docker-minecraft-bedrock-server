@@ -41,6 +41,12 @@ COPY property-definitions.json /etc/bds-property-definitions.json
 # https://minecraft.gamepedia.com/Bedrock_Edition_1.13.0
 # https://minecraft.gamepedia.com/Bedrock_Edition_1.14.0
 ENV VERSION=LATEST \
-    SERVER_PORT=19132
+    SERVER_PORT=19132 \
+    ONLINE_MODE=false \
+    SERVER_NAME="Weaver Home" \
+    VIEW_DISTANCE=16 \
+    TICK_DISTANCE=10 \
+    LEVEL_SEED=EmmaAndHannah
+    
 
 HEALTHCHECK --start-period=1m CMD /usr/local/bin/mc-monitor status-bedrock --host localhost --port $SERVER_PORT
