@@ -1,7 +1,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/itzg/minecraft-bedrock-server.svg)](https://hub.docker.com/r/itzg/minecraft-bedrock-server/)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/itzg/docker-minecraft-bedrock-server.svg)](https://github.com/itzg/docker-minecraft-bedrock-server/issues)
 [![Build](https://github.com/itzg/docker-minecraft-bedrock-server/workflows/Build/badge.svg)](https://github.com/itzg/docker-minecraft-bedrock-server/actions?query=workflow%3ABuild)
-[![Discord](https://img.shields.io/discord/660567679458869252)](https://discord.gg/ScbTrAw)
+[![Discord](https://img.shields.io/discord/660567679458869252?label=Discord&logo=discord)](https://discord.gg/ScbTrAw)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 
 ## Quickstart
@@ -38,6 +38,7 @@ For Minecraft Java Edition you'll need to use this image instead:
   bedrock server process
 - `GID` (default derived from `/data` owner) : can be set to a specific group ID to run the
   bedrock server process
+- `PACKAGE_BACKUP_KEEP` (`2`) : how many package backups to keep
 
 ### Server Properties
 
@@ -116,6 +117,34 @@ in the "LAN Games" part of the "Friends" tab, such as:
 
 ![](docs/example-client.jpg)
 
+## Permissions
+
+The Bedrock Dedicated Server requires permissions be defined with XUIDs. There are various tools to look these up online and they
+are also printed to the log when a player joins. There are 3 levels of permissions and 3 options to configure each group:
+
+- `OPS` is used to define operators on the server.  
+```shell
+-e OPS "1234567890,0987654321"
+```
+- `MEMBERS` is used to define the members on the server.
+```shell
+-e MEMBERS "1234567890,0987654321"
+```
+- `VISITORS` is used to define visitors on the server.
+```shell
+-e VISITORS "1234567890,0987654321"
+```
+
+## Whitelist
+
+There are two ways to handle a whitelist. The first is to set the `WHITE_LIST` environment variable to true and map in [a whitelist.json](https://minecraft.gamepedia.com/Whitelist.json) that is custom-crafted to the container. The other is to use the `WHITE_LIST_USERS` environment variable to list users that should be whitelisted. This list is player names. The server will look up the names and add in the XUID to match the player.
+
+```shell
+-e WHITE_LIST_USERS="player1,player2,player3"
+```
+
+> Starting with 1.16.230.50, `ALLOW_LIST`, `ALLOW_LIST_USERS`, and the file `allowlist.json` will be used instead.
+
 ## More information
 
 For more information about managing Bedrock Dedicated Servers in general, [check out this Reddit post](https://old.reddit.com/user/ProfessorValko/comments/9f438p/bedrock_dedicated_server_tutorial/).
@@ -190,3 +219,7 @@ You can follow the logs of the deployment using:
 ```bash
 kubectl logs -f deployment/bds
 ```
+
+## Solutions for backing up data
+
+- [kaiede/minecraft-bedrock-backup image](https://hub.docker.com/r/kaiede/minecraft-bedrock-backup) provided by @Kaiede
